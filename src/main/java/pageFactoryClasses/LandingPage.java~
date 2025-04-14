@@ -113,7 +113,7 @@ public class LandingPage {
         waitForSpinnerToDisappear();
         wait.until(ExpectedConditions.elementToBeClickable(dateRangeField)).click();
     }
-
+    
 
 
 

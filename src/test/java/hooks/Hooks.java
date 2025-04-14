@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class Hooks {
-
     private static final Logger logger = LogManager.getLogger(Hooks.class);
     private static ExtentReports extent;
     private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
@@ -41,53 +40,60 @@ public class Hooks {
 
         test.set(extent.createTest(scenario.getName()));
 
+        // Get or create WebDriver instance
         driver = DriverManager.getDriver(browser);
-        driver.manage().window().maximize();
-        logger.info("Browser launched and maximized.");
+        if (driver != null) {
+            driver.manage().window().maximize();
+            logger.info("Browser launched and maximized.");
+        }
     }
 
     @After
     public void tearDown(Scenario scenario) {
-        if (scenario.isFailed()) {
-            logger.error("Scenario FAILED: {}", scenario.getName());
+        try {
+            if (scenario.isFailed()) {
+                logger.error("Scenario FAILED: {}", scenario.getName());
+                captureScreenshot(scenario);
+            } else {
+                logger.info("Scenario PASSED: {}", scenario.getName());
+                test.get().pass("Test Passed");
+            }
+        } finally {
+            // Only quit the driver after the last scenario
+                if (driver != null) {
+                    driver.quit();
+                    DriverManager.quitDriver();
+                    logger.info("Browser closed after last scenario: {}", scenario.getName());
+                }
 
-            // Sanitize scenario name for a valid filename
+            extent.flush();
+            logger.info("Extent Reports flushed.");
+
+        }
+    }
+
+    private void captureScreenshot(Scenario scenario) {
+        if (driver != null) {
             String sanitizedScenarioName = scenario.getName().replaceAll("[^a-zA-Z0-9]", "_");
             String filename = sanitizedScenarioName + ".png";
             String directory = System.getProperty("user.dir") + "/FailedScreenshots/";
 
-            // Ensure directory exists
             File screenshotDir = new File(directory);
             if (!screenshotDir.exists()) {
                 screenshotDir.mkdirs();
             }
 
-            // Capture the screenshot
-            File sourceFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            File destinationFile = new File(directory + filename);
-
             try {
+                File sourceFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                File destinationFile = new File(directory + filename);
                 FileUtils.copyFile(sourceFile, destinationFile);
                 logger.info("Screenshot saved at: {}", destinationFile.getAbsolutePath());
-
-                // Attach screenshot to Extent Reports
-                test.get().fail("Test Failed - Screenshot Attached").addScreenCaptureFromPath("../FailedScreenshots/" + filename);
-
+                test.get().fail("Test Failed - Screenshot Attached")
+                        .addScreenCaptureFromPath("../FailedScreenshots/" + filename);
             } catch (IOException e) {
                 logger.error("Error capturing screenshot: {}", e.getMessage());
             }
-        } else {
-            logger.info("Scenario PASSED: {}", scenario.getName());
-            test.get().pass("Test Passed");
         }
-
-        if (driver != null) {
-            driver.quit();
-            logger.info("Browser closed after scenario: {}", scenario.getName());
-        }
-
-        extent.flush();
-        logger.info("Extent Reports flushed.");
     }
 
     public static ExtentTest getTest() {

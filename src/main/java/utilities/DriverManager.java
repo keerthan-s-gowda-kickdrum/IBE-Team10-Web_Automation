@@ -1,5 +1,6 @@
 package utilities;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -11,7 +12,6 @@ public class DriverManager {
     private static WebDriver driver;
     private static final Logger logger = LogManager.getLogger(DriverManager.class);
 
-    // Private constructor to prevent instantiation
     private DriverManager() {}
 
     public static synchronized WebDriver getDriver(String browser) {
@@ -25,10 +25,13 @@ public class DriverManager {
     private static WebDriver createDriver(String browser) {
         switch (browser.toLowerCase()) {
             case "chrome":
+                WebDriverManager.chromedriver().setup();
                 return new ChromeDriver();
             case "firefox":
+                WebDriverManager.firefoxdriver().setup();
                 return new FirefoxDriver();
             case "edge":
+                WebDriverManager.edgedriver().setup();
                 return new EdgeDriver();
             default:
                 throw new IllegalArgumentException("Invalid browser: " + browser);
@@ -43,7 +46,6 @@ public class DriverManager {
         }
     }
 
-    // Optional: Method to reset driver if needed
     public static synchronized void resetDriver(String browser) {
         quitDriver();
         getDriver(browser);
