@@ -32,6 +32,15 @@ public class HeaderFooterPage {
     @FindBy(css = ".header__login-btn")
     private WebElement loginButton;
 
+    @FindBy(css = ".footer, footer")
+    private WebElement footer;
+
+    @FindBy(css = ".footer img, footer img, .footer .logo, footer .logo")
+    private WebElement footerLogo;
+
+    @FindBy(css = ".footer .copyright, footer .copyright, .footer p, footer p")
+    private WebElement copyrightText;
+
     public HeaderFooterPage(WebDriver driver) {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
@@ -63,5 +72,21 @@ public class HeaderFooterPage {
 
     public boolean isLoginButtonVisible() {
         return wait.until(ExpectedConditions.visibilityOf(loginButton)).isDisplayed();
+    }
+
+    public boolean isFooterVisible() {
+        return wait.until(ExpectedConditions.visibilityOf(footer)).isDisplayed();
+    }
+
+    public boolean isFooterLogoDisplayed() {
+        return wait.until(ExpectedConditions.visibilityOf(footerLogo)).isDisplayed();
+    }
+
+    public String getCopyrightText() {
+        return wait.until(ExpectedConditions.visibilityOf(copyrightText)).getText();
+    }
+
+    public boolean isCopyrightDisplayed() {
+        return wait.until(ExpectedConditions.visibilityOf(copyrightText)).isDisplayed();
     }
 }

@@ -76,4 +76,27 @@ public class HeaderFooterSteps {
         logger.info("Login button visibility verified");
         Hooks.getTest().log(Status.PASS, "Login button is visible in header");
     }
+
+    @Then("the footer should be visible")
+    public void theFooterShouldBeVisible() {
+        assertTrue("Footer is not visible", headerFooterPage.isFooterVisible());
+        logger.info("Footer visibility verified");
+        Hooks.getTest().log(Status.PASS, "Footer is visible on the page");
+    }
+
+    @And("the company logo should be displayed in the footer")
+    public void theCompanyLogoShouldBeDisplayedInTheFooter() {
+        assertTrue("Footer logo is not displayed", headerFooterPage.isFooterLogoDisplayed());
+        logger.info("Footer logo display verified");
+        Hooks.getTest().log(Status.PASS, "Company logo is displayed in footer");
+    }
+
+    @And("the footer should display the copyright information")
+    public void theFooterShouldDisplayCopyrightInformation() {
+        assertTrue("Copyright information is not displayed", headerFooterPage.isCopyrightDisplayed());
+        String copyrightText = headerFooterPage.getCopyrightText();
+        assertFalse("Copyright text should not be empty", copyrightText.isEmpty());
+        logger.info("Copyright information verified");
+        Hooks.getTest().log(Status.PASS, "Copyright information is displayed in footer");
+    }
 }
