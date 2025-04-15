@@ -66,8 +66,9 @@ public class Hooks {
                     logger.info("Browser closed after last scenario: {}", scenario.getName());
                 }
 
-            extent.flush();
-            logger.info("Extent Reports flushed.");
+
+                extent.flush();
+                logger.info("Extent Reports flushed.");
 
         }
     }

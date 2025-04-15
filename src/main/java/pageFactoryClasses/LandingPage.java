@@ -52,6 +52,9 @@ public class LandingPage {
     @FindBy(css = "span.date-input__text:nth-child(3)")
     private WebElement checkOutPlaveHolder ;
 
+    @FindBy(xpath = "//button[@class='search__guests-button']")
+    private WebElement guestDropdown ;
+
 
     private WebDriver driver;
     private JavascriptExecutor js;
@@ -255,6 +258,10 @@ public class LandingPage {
     public String getCheckOutPlaceholderText() {
         waitForSpinnerToDisappear();
         return wait.until(ExpectedConditions.visibilityOf(checkOutPlaveHolder)).getText();
+    }
+
+    public void clickSearchButton() {
+        searchButton.click();
     }
     
     

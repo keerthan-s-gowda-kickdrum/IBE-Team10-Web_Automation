@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.junit.Assert.*;
 import pageFactoryClasses.LandingPage;
+import pageFactoryClasses.RoomResultsPage;
 import utilities.ConfigReader;
 import utilities.DriverManager;
 
@@ -20,11 +21,13 @@ public class LandingPageSteps {
     private static final Logger logger = LogManager.getLogger(LandingPageSteps.class);
     private WebDriver driver;
     private LandingPage landingPage;
+    private RoomResultsPage roomResultsPage;
     private WebDriverWait wait;
 
     public LandingPageSteps() {
         this.driver = DriverManager.getDriver(ConfigReader.getProperty("browser"));
         this.landingPage = new LandingPage(driver);
+        this.roomResultsPage = new RoomResultsPage(driver);
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
@@ -176,6 +179,21 @@ public void verifySelectedDatesInPlaceholder() {
     Hooks.getTest().log(Status.PASS, 
                        String.format("Dates displayed correctly - Check-in: %s, Check-out: %s", 
                        actualCheckIn, actualCheckOut));
+}
+
+@When("the user clicks the Search button")
+public void the_user_clicks_the_search_button() {
+    landingPage.clickSearchButton(); 
+    logger.info("User clicked the Search button");
+    Hooks.getTest().log(Status.INFO, "User clicked the Search button");
+}
+
+@Then("the user should be redirected to the room results page")
+public void the_user_should_be_redirected_to_the_room_results_page() {
+    boolean isRoomResultsPageDisplayed = roomResultsPage.isRoomResultsPageDisplayed();
+    assertTrue("User is not redirected to the Room Results Page", isRoomResultsPageDisplayed);
+    logger.info("User is redirected to the Room Results Page");
+    Hooks.getTest().log(Status.PASS, "User is redirected to the Room Results Page");
 }
 
 }

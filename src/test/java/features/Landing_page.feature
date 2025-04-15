@@ -44,5 +44,14 @@ Feature: Landing Page Verification
     When the user clicks the Apply button
     And the selected check-in and check-out dates should be displayed in the placeholder field
 
+Scenario: User should be redirected to the room results page after selecting property and dates
+    Given the user is on the landing page
+    And the user selects "Team 19 Hotel" from the Property name dropdown
+    And the user clicks on the check-in/check-out field
+    And the user selects the check-in date from the config file
+    And the user selects a check-out date based on the configured range
+    When the user clicks the Apply button
+    When the user clicks the Search button
+    Then the user should be redirected to the room results page
 
 
