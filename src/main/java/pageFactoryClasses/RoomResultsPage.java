@@ -98,6 +98,15 @@ public class RoomResultsPage {
     @FindBy(xpath = "//button[normalize-space()='×']")
     private List<WebElement> roomModalCloseButton;
 
+    @FindBy(xpath = "//span[contains(@class, '_package__price')]")
+    private List<WebElement> dealsPriceList;
+
+    @FindBy(xpath = "//button[contains(@class, '_package__select-button')]")
+    private List<WebElement> selectPackageBtns;
+
+    @FindBy(xpath = "//h2[normalize-space()='Payment Info']")
+    private WebElement chekoutPageTitle;
+
 
 
     private WebDriver driver;
@@ -414,6 +423,56 @@ public void clickRoomModalCloseButton() {
         logger.error("Failed to click on the room modal close button. Exception: " + e.getMessage());
     }
 }
+
+public void clickSelectPackageWithLeastPrice() {
+    try {
+        wait.until(ExpectedConditions.visibilityOfAllElements(dealsPriceList));
+        wait.until(ExpectedConditions.visibilityOfAllElements(selectPackageBtns));
+
+        double minPrice = Double.MAX_VALUE;
+        int minIndex = -1;
+
+        for (int i = 0; i < dealsPriceList.size(); i++) {
+            String priceText = dealsPriceList.get(i).getText().trim().replace("₹", "").replaceAll(",", "");
+            if (!priceText.isEmpty()) {
+                double price = Double.parseDouble(priceText);
+                if (price < minPrice) {
+                    minPrice = price;
+                    minIndex = i;
+                }
+            }
+        }
+
+        if (minIndex != -1 && minIndex < selectPackageBtns.size()) {
+            WebElement selectBtn = selectPackageBtns.get(minIndex);
+            wait.until(ExpectedConditions.elementToBeClickable(selectBtn)).click();
+            logger.info("Clicked on Select Package button with the least price: ₹" + minPrice);
+        } else {
+            logger.error("Unable to find the Select Package button for the least priced deal.");
+        }
+    } catch (Exception e) {
+        logger.error("Failed to click Select Package for least price deal. Exception: " + e.getMessage());
+    }
+}
+
+public boolean isCheckoutPageDisplayed() {
+    try {
+        String currentUrl = driver.getCurrentUrl();
+        logger.info("Current URL: " + currentUrl);
+
+        // Check URL conditions
+        boolean urlValid = currentUrl.contains("checkout") ;
+
+        // Wait for the checkout title to be visible
+        boolean titleVisible = wait.until(ExpectedConditions.visibilityOf(chekoutPageTitle)).isDisplayed();
+
+        return urlValid && titleVisible;
+    } catch (Exception e) {
+        logger.error("Checkout page verification failed. Exception: " + e.getMessage());
+        return false;
+    }
+}
+
 
 
 }

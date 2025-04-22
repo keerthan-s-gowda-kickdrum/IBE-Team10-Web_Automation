@@ -147,6 +147,12 @@ Feature: Landing Page Verification
     When the user clicks on the close (X) button
     Then the stepper should be displayed
     And the "Choose Room" step should be highlighted as current
+
+@RoomResultsPage
+  Scenario: User selects the deal with the least price and navigates to the checkout page
+    Given the user launches the browser and navigates to the Room Modal page
+    When the user clicks on the Select Package button of the deal with the least price
+    Then the user should be redirected to the checkout page
    
  
 

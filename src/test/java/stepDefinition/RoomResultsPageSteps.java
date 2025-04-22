@@ -344,6 +344,32 @@ public void userClicksOnCloseButton() {
     }
 }
 
-
-
+@When("the user clicks on the Select Package button of the deal with the least price")
+public void userClicksSelectPackageOfLeastPriceDeal() {
+    try {
+        roomResultsPage.clickSelectPackageWithLeastPrice();
+        logger.info("User clicked on the Select Package button for the deal with the least price");
+        Hooks.getTest().log(Status.PASS, "Clicked on Select Package button of the least price deal");
+    } catch (Exception e) {
+        logger.error("Failed to click on Select Package button for least price deal: " + e.getMessage());
+        Hooks.getTest().log(Status.FAIL, "Error clicking on least price deal: " + e.getMessage());
+    }
 }
+@Then("the user should be redirected to the checkout page")
+public void userShouldBeRedirectedToCheckOutPage() {
+    try {
+        boolean isCheckoutPageDisplayed = roomResultsPage.isCheckoutPageDisplayed();
+        assertTrue("User is not redirected to the Checkout Page", isCheckoutPageDisplayed);
+        logger.info("User is redirected to the Checkout Page");
+        Hooks.getTest().log(Status.PASS, "User is redirected to the Checkout Page");
+    } catch (Exception e) {
+        logger.error("Error while verifying redirection to checkout page: " + e.getMessage());
+        Hooks.getTest().log(Status.FAIL, "Error during redirection verification: " + e.getMessage());
+    }
+}
+}
+
+
+
+
+
