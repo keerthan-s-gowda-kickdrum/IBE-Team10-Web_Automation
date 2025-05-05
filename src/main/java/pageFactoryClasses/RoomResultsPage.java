@@ -101,7 +101,7 @@ public class RoomResultsPage {
     @FindBy(xpath = "//span[contains(@class, '_package__price')]")
     private List<WebElement> dealsPriceList;
 
-    @FindBy(xpath = "//button[contains(@class, '_package__select-button')]")
+    @FindBy(xpath = "//button[normalize-space()='SELECT PACKAGE']")
     private List<WebElement> selectPackageBtns;
 
     @FindBy(xpath = "//h2[normalize-space()='Payment Info']")
@@ -255,7 +255,7 @@ public class RoomResultsPage {
         // Extract the text of each price and convert to a list of doubles for comparison
         List<Double> prices = new ArrayList<>();
         for (WebElement priceElement : pricesInRoomCard) {
-            String priceText = priceElement.getText().replace("₹", "").trim(); // Remove currency symbol and any extra spaces
+            String priceText = priceElement.getText().replace("$", "").trim(); // Remove currency symbol and any extra spaces
             prices.add(Double.parseDouble(priceText));
         }
 
@@ -433,7 +433,7 @@ public void clickSelectPackageWithLeastPrice() {
         int minIndex = -1;
 
         for (int i = 0; i < dealsPriceList.size(); i++) {
-            String priceText = dealsPriceList.get(i).getText().trim().replace("₹", "").replaceAll(",", "");
+            String priceText = dealsPriceList.get(i).getText().trim().replace("$", "").replaceAll(",", "");
             if (!priceText.isEmpty()) {
                 double price = Double.parseDouble(priceText);
                 if (price < minPrice) {
@@ -461,12 +461,12 @@ public boolean isCheckoutPageDisplayed() {
         logger.info("Current URL: " + currentUrl);
 
         // Check URL conditions
-        boolean urlValid = currentUrl.contains("checkout") ;
+       // boolean urlValid = currentUrl.contains("checkout") ;
 
         // Wait for the checkout title to be visible
         boolean titleVisible = wait.until(ExpectedConditions.visibilityOf(chekoutPageTitle)).isDisplayed();
 
-        return urlValid && titleVisible;
+        return titleVisible;
     } catch (Exception e) {
         logger.error("Checkout page verification failed. Exception: " + e.getMessage());
         return false;

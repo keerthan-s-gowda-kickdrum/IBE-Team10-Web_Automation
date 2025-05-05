@@ -23,7 +23,7 @@ public class HeaderFooterSteps {
 
     @Given("the user is on the landing page")
     public void theUserIsOnTheLandingPage() {
-        driver.get(ConfigReader.getProperty("baseURL") + "/#/");
+        driver.get(ConfigReader.getProperty("baseURL"));
         logger.info("Navigated to landing page");
         Hooks.getTest().log(Status.INFO, "Navigated to landing page URL");
     }

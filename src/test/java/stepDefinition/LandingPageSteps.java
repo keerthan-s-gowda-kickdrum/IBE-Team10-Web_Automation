@@ -74,9 +74,9 @@ public class LandingPageSteps {
 
     @And("the user selects a property from the {string} dropdown")
     public void userSelectsProperty(String dropdownName) {
-        landingPage.selectProperty("Team 19 Hotel");
-        logger.info("Selected property: Team 19 Hotel");
-        Hooks.getTest().log(Status.PASS, "User selected property: Team 19 Hotel from dropdown");
+        landingPage.selectProperty("Team 7 Hotel");
+        logger.info("Selected property: Team 7 Hotel");
+        Hooks.getTest().log(Status.PASS, "User selected property: Team 7 Hotel from dropdown");
     }
 
     @Then("{string} should be displayed as the place holder of the Property name dropdown")

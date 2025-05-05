@@ -22,6 +22,9 @@ public class LandingPage {
     @FindBy(css = "img[alt*='banner'], img[alt*='hero'], .banner-image, .hero-image, .header-image, header img, main img")
     private List<WebElement> bannerImages;
 
+    @FindBy(xpath = "//div[@class='search__container']")
+    private WebElement searchForm;
+
     @FindBy(css = ".spinner-container")
     private WebElement spinner;
 
@@ -175,7 +178,7 @@ public class LandingPage {
             String checkInDay = ConfigReader.getProperty("checkInDay"); // e.g., "14"
 
             // Parameterize the base XPath
-            String dynamicXpath = String.format("(//span[contains(text(),'%s')])[1]", checkInDay);
+            String dynamicXpath = String.format("(//span[contains(text(),'%s')])[2]", checkInDay);
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement dateElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dynamicXpath)));
@@ -206,7 +209,7 @@ public class LandingPage {
             int checkOutDay = checkInDay + range;
     
             // Parameterize the base XPath
-            String dynamicXpath = String.format("(//span[contains(text(),'%s')])[1]", checkOutDay);
+            String dynamicXpath = String.format("(//span[contains(text(),'%s')])[2]", checkOutDay);
     
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement dateElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dynamicXpath)));
@@ -262,6 +265,10 @@ public class LandingPage {
 
     public void clickSearchButton() {
         searchButton.click();
+    }
+
+    public boolean isSearchFormDisplayed() {
+        return  wait.until(ExpectedConditions.visibilityOf(searchForm)).isDisplayed();
     }
     
     
